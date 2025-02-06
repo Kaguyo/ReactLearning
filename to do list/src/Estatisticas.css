@@ -1,0 +1,39 @@
+#pai {
+    display: flex;
+    gap: 69.3%;
+    word-wrap: nowrap;
+}
+
+.filho {
+    display: flex;
+    gap: 8px;
+}
+
+#statisticsDiv { 
+    width: 736px;
+    margin: 0 auto;
+    margin-top: 63px;
+    font-size: 14px;
+    gap: 24px;
+}
+
+.tasksP {
+    color:#4EA8DE;
+    font-weight: 700;
+}
+ 
+#tasksConcluidas {
+    color: #8284FA;
+}
+
+.counterDiv {
+    display: flex;
+    width: 25px;
+    height: 19px;
+    border-radius: 999px;
+    background-color: #262626;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}

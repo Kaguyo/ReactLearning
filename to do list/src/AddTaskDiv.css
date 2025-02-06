@@ -1,0 +1,39 @@
+#searchBarDiv {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+#inputSearchBar {
+    width: 638px;
+    height: 54px;
+    background-color: #262626;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 16px;
+    font-family: 'Inter';
+    border: 1px;
+    border-radius: 8px;
+    outline: none;
+    color: white;
+} 
+
+#createTaskBtn {
+    width: 90px;
+    height: 52px;
+    background: #1E6F9F;
+    border-radius: 8px;
+    padding: 16px;
+    gap: 8px;
+    font-weight: 700;
+    color: #F2F2F2;
+    border: 0;
+}
+
+#createTaskBtn:hover {
+    cursor: pointer;
+    background-color: #185980;
+}
+/*#plus {
+    
+}

@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/Inter/Inter-Regular.ttf') format('truetype'),
+       url('assets/fonts/Inter/Inter-Bold.ttf') format('truetype');
+  font-weight: 400 800; /* Regular weight */
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background-color: #1a1a1a;
+}
