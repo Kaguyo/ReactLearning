@@ -4,11 +4,11 @@ import './assets/styles/SignUp.css';
 interface SignUpProps {
     imageSource : string;
     animationSource : string;
-    setHertaStealth : React.Dispatch<React.SetStateAction<string>>;
+    setHertaFace : React.Dispatch<React.SetStateAction<string>>;
     setHertaAction : React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function SignUp({ imageSource, animationSource, setHertaStealth, setHertaAction }: SignUpProps) {
+export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAction }: SignUpProps) {
     function hertaTakeAction(animationSource: string) {
         let size = animationSource.length;
 
@@ -27,13 +27,13 @@ export function SignUp({ imageSource, animationSource, setHertaStealth, setHerta
         while (imageSource[index] != "H"){
             strPath += imageSource[index]
             index++
-            if (index >= imageSource.length) break
+            if (index >= imageSource.length -1) break
         }
 
         if (imageSource.indexOf("y") == -1){
-            setHertaStealth(strPath + "HertaSpying.png")
+            setHertaFace(strPath + "HertaSpying.png")
         } else {
-            setHertaStealth(strPath + "HertaStealthing.png")
+            setHertaFace(strPath + "HertaStealthing.png")
         }
     }
 
@@ -50,9 +50,9 @@ export function SignUp({ imageSource, animationSource, setHertaStealth, setHerta
             <div id="ghostDiv">
                 <div id="hertaFaceDiv" onClick={() => hertaIconSwitch(imageSource)}>
                     <img src={imageSource} id='hertaSpy' />
-                    <div id="hertaHandDiv">
-                        <img src={animationSource} id="hertaAction" />
-                    </div>
+                </div>
+                <div id="hertaHandDiv">
+                    <img src={animationSource} id="hertaAction" />
                 </div>
             </div>
             <input type="text" className="signUpInput" placeholder="Username" />

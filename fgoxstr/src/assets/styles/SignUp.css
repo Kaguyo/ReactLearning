@@ -1,14 +1,13 @@
 #signUpContainer {
     position: relative;
     margin: 0 auto;
-    margin-top: 200px;
     height: 520px;
     width: 700px;
     background-color: rgb(6, 6, 6);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 50px;
+    padding-top: 70px;
     gap: 10px;
 }
 
@@ -22,24 +21,33 @@
 }
 
 #hertaFaceDiv {
-    position: relative;
     cursor: pointer;
+    position: absolute;
+    border-radius: 999px;
+    clip: rect(5px, 92px, 90px, 8px);
+    transition: transform 0.1s;
+    transform-origin: center;
+}
+
+#hertaFaceDiv:hover {
+    transform: scale(1.1);
 }
 
 #hertaHandDiv {
     position: absolute;
-    top: 50%;
+    top: 39%;
 }
+
 
 .signUpInput {
     width: 338px;
-    height: 40px;
+    height: 32px;
     background-color: #ffffff;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 700;
     padding-left: 16px;
     border: 1px;
-    border-radius: 10px;
+    border-radius: 7px;
     outline: none;
     color: rgb(0, 0, 0);
 }
@@ -50,14 +58,14 @@
     border-radius: 10px;
     border: 1px;
     background-color: 
-    rgb(20, 108, 248);
+    rgb(157, 20, 248);
     color: white;
     font-weight: 700;
     cursor: pointer;
 }
 
 .signUpButton:hover {
-    background-color: rgba(20, 108, 248, 0.47);
+    background-color: rgba(157, 20, 248, 0.46);
 }
 
 #submitContainer {
@@ -74,4 +82,10 @@
 
 #alreadyHaveAnAccount {
     cursor: pointer;
+    transition: transform 0.1s;
+    transform-origin: center;
+}
+
+#alreadyHaveAnAccount:hover {
+    transform: scale(1.1);
 }
