@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+input::placeholder {
+    color: rgb(40, 40, 40); /* Cor desejada */
+    opacity: 1; /* Garante que a cor fique visível */
+}
+
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background-color: #1a1a1a;
+}

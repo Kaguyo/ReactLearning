@@ -1,0 +1,77 @@
+#signUpContainer {
+    position: relative;
+    margin: 0 auto;
+    margin-top: 200px;
+    height: 520px;
+    width: 700px;
+    background-color: rgb(6, 6, 6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    gap: 10px;
+}
+
+#ghostDiv {
+    position: absolute;
+    left: 5%;
+    top: 48%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 200px;
+}
+
+#hertaFaceDiv {
+    position: relative;
+    cursor: pointer;
+}
+
+#hertaHandDiv {
+    position: absolute;
+    top: 50%;
+}
+
+.signUpInput {
+    width: 338px;
+    height: 40px;
+    background-color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    padding-left: 16px;
+    border: 1px;
+    border-radius: 10px;
+    outline: none;
+    color: rgb(0, 0, 0);
+}
+
+.signUpButton {
+    width: 75px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px;
+    background-color: 
+    rgb(20, 108, 248);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.signUpButton:hover {
+    background-color: rgba(20, 108, 248, 0.47);
+}
+
+#submitContainer {
+    margin-top: 20px;
+    width: 338px;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    gap: 100px;
+    font-size: 12px;
+}
+
+#alreadyHaveAnAccount {
+    cursor: pointer;
+}
