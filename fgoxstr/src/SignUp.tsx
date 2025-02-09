@@ -1,64 +1,102 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ChangeEvent } from "react";
 import './assets/styles/SignUp.css';
 
 interface SignUpProps {
-    imageSource : string;
-    animationSource : string;
-    setHertaFace : React.Dispatch<React.SetStateAction<string>>;
-    setHertaAction : React.Dispatch<React.SetStateAction<string>>;
+    imageSource: string;
+    animationSource: string;
+    setHertaFace: React.Dispatch<React.SetStateAction<string>>;
+    setHertaAction: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAction }: SignUpProps) {
-    function hertaTakeAction(animationSource: string) {
-        let size = animationSource.length;
+    const strPath = "/src/assets/icons/";
+    const [showPassword, setShowPassword] = useState(false);
 
-        if (animationSource[size - 5] === "1") {
-            setHertaAction(animationSource.slice(0, size - 5) + "2.png");
-        } else if (animationSource[size - 5] === "2") {
-            setHertaAction(animationSource.slice(0, size - 5) + "3.png");
-        } else if (animationSource[size - 5] === "3") {
-            setHertaAction(animationSource.slice(0, size - 5) + "1.png");
+    const copyEmailFrame = useRef(0);
+    const copyPasswordFrame = useRef(0);
+
+    const [emailField, setEmailField] = useState("");
+    const [passwordField, setPasswordField] = useState("");
+    
+    const [lastInputTime, setLastInputTime] = useState<number>(0);
+
+    function handleText(event: ChangeEvent<HTMLInputElement>) {
+        if (event.target.type == "email") {
+            setEmailField(event.target.value);
+            setHertaFace(strPath + "HertaSpying.png");
+            setHertaAction(strPath + `WritingHerta${copyEmailFrame.current + 1}.png`);
+            if (copyEmailFrame.current <= 8) {
+                copyEmailFrame.current ++;
+            } else {
+                copyEmailFrame.current = 0;
+            }
+            setLastInputTime(Date.now());
+
+        } else if (event.target.id == "password") {
+            setPasswordField(event.target.value);
+            if (showPassword) {
+                setHertaFace(strPath + "HertaSpying.png");
+                setHertaAction(strPath + `WritingHerta${copyPasswordFrame.current + 1}.png`);
+            }
+            if (copyPasswordFrame.current <= 8) {
+                copyPasswordFrame.current ++;
+            } else {
+                copyPasswordFrame.current = 0;
+            }
+            setLastInputTime(Date.now());
         }
     }
 
-    function hertaIconSwitch(imageSource : string){
-        let strPath = ""
-        let index = 0
-        while (imageSource[index] != "H"){
-            strPath += imageSource[index]
-            index++
-            if (index >= imageSource.length -1) break
-        }
-
-        if (imageSource.indexOf("y") == -1){
-            setHertaFace(strPath + "HertaSpying.png")
-        } else {
-            setHertaFace(strPath + "HertaStealthing.png")
-        }
-    }
-
+    // Inicializacao Timer de last input
     useEffect(() => {
         const interval = setInterval(() => {
-            hertaTakeAction(animationSource);
+            const timeElapsed = Date.now() - lastInputTime;
+            if (timeElapsed >= 800) {
+                if (!showPassword) {
+                    if (imageSource == strPath + "HertaSpying.png") {
+                        setHertaAction(strPath + "HertaThinking1.png");
+                    }
+                    setHertaFace(strPath + "HertaStealthing.png");
+                }
+            }
+        }, 800);
+
+        return () => clearInterval(interval);
+    }, [lastInputTime, emailField, passwordField, strPath, imageSource]);
+
+    // Inicializacao de animacaoIdle Thinking
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const timeElapsed = Date.now();
+            if (timeElapsed >= 500 && !showPassword && (timeElapsed - lastInputTime) >= 500) {
+                if (animationSource[animationSource.length-5] == "1") {
+                    setHertaAction(strPath + "HertaThinking2.png");
+                } else if (animationSource[animationSource.length-5] == "2") {
+                    setHertaAction(strPath + "HertaThinking3.png");
+                } else if (animationSource[animationSource.length-5] == "3") {
+                    setHertaAction(strPath + "HertaThinking1.png");
+                }
+            }
         }, 500);
 
         return () => clearInterval(interval);
-    }, [animationSource]);
+    }, [lastInputTime, animationSource]);
 
     return (
         <div id="signUpContainer">
             <div id="ghostDiv">
                 <div id="hertaFaceDiv" onClick={() => hertaIconSwitch(imageSource)}>
-                    <img src={imageSource} id='hertaSpy' />
+                    <img src={imageSource} id='hertaFace' />
                 </div>
                 <div id="hertaHandDiv">
                     <img src={animationSource} id="hertaAction" />
                 </div>
             </div>
             <input type="text" className="signUpInput" placeholder="Username" />
-            <input type="email" className="signUpInput" placeholder="Email" />
-            <input type="password" className="signUpInput" placeholder="Password" />
-            <input type="password" className="signUpInput" placeholder="Confirm Password" />
+            <input type="email" className="signUpInput" placeholder="Email" onChange={handleText} />
+            <input id="password" type="password" className="signUpInput" placeholder="Password" onChange={handleText} />
+            <input id="passwordConfirmation" type="password" className="signUpInput" placeholder="Confirm Password" />
             <div id="submitContainer">
                 <button className="signUpButton">Sign Up</button>
                 <p id="alreadyHaveAnAccount">Already have an account?</p>
