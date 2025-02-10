@@ -26,57 +26,43 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
             setEmailField(event.target.value);
             setHertaFace(strPath + "HertaSpying.png");
             setHertaAction(strPath + `WritingHerta${copyEmailFrame.current + 1}.png`);
-            if (copyEmailFrame.current <= 8) {
-                copyEmailFrame.current ++;
-            } else {
-                copyEmailFrame.current = 0;
-            }
+            copyEmailFrame.current = (copyEmailFrame.current + 1) % 9;
             setLastInputTime(Date.now());
-
         } else if (event.target.id == "password") {
             setPasswordField(event.target.value);
             if (showPassword) {
                 setHertaFace(strPath + "HertaSpying.png");
                 setHertaAction(strPath + `WritingHerta${copyPasswordFrame.current + 1}.png`);
             }
-            if (copyPasswordFrame.current <= 8) {
-                copyPasswordFrame.current ++;
-            } else {
-                copyPasswordFrame.current = 0;
-            }
+            copyPasswordFrame.current = (copyPasswordFrame.current + 1) % 9;
             setLastInputTime(Date.now());
         }
     }
 
-    // Inicializacao Timer de last input
+    function toggleShowPassword() {
+        setShowPassword(prev => !prev);
+    }
+
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now() - lastInputTime;
-            if (timeElapsed >= 800) {
-                if (!showPassword) {
-                    if (imageSource == strPath + "HertaSpying.png") {
-                        setHertaAction(strPath + "HertaThinking1.png");
-                    }
-                    setHertaFace(strPath + "HertaStealthing.png");
+            if (timeElapsed >= 800 && !showPassword) {
+                if (imageSource == strPath + "HertaSpying.png") {
+                    setHertaAction(strPath + "HertaThinking1.png");
                 }
+                setHertaFace(strPath + "HertaStealthing.png");
             }
         }, 800);
 
         return () => clearInterval(interval);
     }, [lastInputTime, emailField, passwordField, strPath, imageSource]);
 
-    // Inicializacao de animacaoIdle Thinking
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now();
-            if (timeElapsed >= 500 && !showPassword && (timeElapsed - lastInputTime) >= 500) {
-                if (animationSource[animationSource.length-5] == "1") {
-                    setHertaAction(strPath + "HertaThinking2.png");
-                } else if (animationSource[animationSource.length-5] == "2") {
-                    setHertaAction(strPath + "HertaThinking3.png");
-                } else if (animationSource[animationSource.length-5] == "3") {
-                    setHertaAction(strPath + "HertaThinking1.png");
-                }
+            if (timeElapsed >= 500 && (timeElapsed - lastInputTime) >= 500) {
+                const lastChar = animationSource[animationSource.length - 5];
+                setHertaAction(strPath + `HertaThinking${(parseInt(lastChar) % 3) + 1}.png`);
             }
         }, 500);
 
@@ -93,10 +79,19 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                     <img src={animationSource} id="hertaAction" />
                 </div>
             </div>
+            <div id="showPasswordContainer">
+                <input 
+                    type="radio"
+                    id="showPassword" 
+                    checked={showPassword} 
+                    onChange={toggleShowPassword} 
+                />
+                <label htmlFor="showPassword">Show password</label>
+            </div>
             <input type="text" className="signUpInput" placeholder="Username" />
             <input type="email" className="signUpInput" placeholder="Email" onChange={handleText} />
-            <input id="password" type="password" className="signUpInput" placeholder="Password" onChange={handleText} />
-            <input id="passwordConfirmation" type="password" className="signUpInput" placeholder="Confirm Password" />
+            <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" onChange={handleText} />
+            <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Confirm Password" />
             <div id="submitContainer">
                 <button className="signUpButton">Sign Up</button>
                 <p id="alreadyHaveAnAccount">Already have an account?</p>

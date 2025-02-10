@@ -38,7 +38,6 @@
     top: 39%;
 }
 
-
 .signUpInput {
     width: 338px;
     height: 32px;
@@ -69,7 +68,7 @@
 }
 
 #submitContainer {
-    margin-top: 20px;
+    margin-top: 45px;
     width: 338px;
     display: flex;
     align-items: center;
@@ -88,4 +87,24 @@
 
 #alreadyHaveAnAccount:hover {
     transform: scale(1.1);
+}
+
+#showPasswordContainer {
+    position: absolute;
+    top: 47%;
+    font-size: 14px;
+    left: 26%;
+    color: white;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+#showPassword {
+    border: 2px solid #333;
+    width: 18px;
+    height: 18px;
+    appearance: none;
+    cursor: pointer;
+    background-color: #ffffff;
 }
