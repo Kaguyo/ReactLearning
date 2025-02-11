@@ -13,46 +13,56 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     const strPath = "/src/assets/icons/";
     const [showPassword, setShowPassword] = useState(false);
 
+    // Serve como chave mestre em condiçoes if || para manipular comportamento da herta na pagina signup
+    const [hertaAdmKey, setHertaAdmKey] = useState(false);
+
     const copyEmailFrame = useRef(0);
     const copyPasswordFrame = useRef(0);
 
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
+    const [password2Field, setPassword2Field] = useState("");
     
     const [lastInputTime, setLastInputTime] = useState<number>(0);
 
     function handleText(event: ChangeEvent<HTMLInputElement>) {
-        if (event.target.type == "email") {
+        if (event.target.type === "email") {
             setEmailField(event.target.value);
             setHertaFace(strPath + "HertaSpying.png");
             setHertaAction(strPath + `WritingHerta${copyEmailFrame.current + 1}.png`);
             copyEmailFrame.current = (copyEmailFrame.current + 1) % 9;
             setLastInputTime(Date.now());
-        } else if (event.target.id == "password") {
+        } else if (event.target.id === "password") {
             setPasswordField(event.target.value);
             if (showPassword) {
                 setHertaFace(strPath + "HertaSpying.png");
                 setHertaAction(strPath + `WritingHerta${copyPasswordFrame.current + 1}.png`);
+                setLastInputTime(Date.now());
             }
             copyPasswordFrame.current = (copyPasswordFrame.current + 1) % 9;
-            setLastInputTime(Date.now());
+        } else if (event.target.id === "passwordConfirmation") {
+            setPassword2Field(event.target.value);
         }
     }
 
     function toggleShowPassword() {
+        if (!showPassword){
+            setHertaAdmKey(true);
+            console.log(hertaAdmKey);
+        }
         setShowPassword(prev => !prev);
     }
 
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now() - lastInputTime;
-            if (timeElapsed >= 800 && !showPassword) {
-                if (imageSource == strPath + "HertaSpying.png") {
+            if (timeElapsed >= 500 && (!showPassword || hertaAdmKey)) {
+                if (imageSource === strPath + "HertaSpying.png") {
                     setHertaAction(strPath + "HertaThinking1.png");
                 }
                 setHertaFace(strPath + "HertaStealthing.png");
             }
-        }, 800);
+        }, 500);
 
         return () => clearInterval(interval);
     }, [lastInputTime, emailField, passwordField, strPath, imageSource]);
@@ -80,18 +90,20 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                 </div>
             </div>
             <div id="showPasswordContainer">
-                <input 
-                    type="radio"
-                    id="showPassword" 
-                    checked={showPassword} 
-                    onChange={toggleShowPassword} 
-                />
-                <label htmlFor="showPassword">Show password</label>
+                <label className="checkbox-container">
+                    <input 
+                        type="checkbox"
+                        id="showPassword"
+                        checked={showPassword} 
+                        onChange={toggleShowPassword} 
+                    />
+                    <span className="checkbox-check"></span>
+                </label>
             </div>
             <input type="text" className="signUpInput" placeholder="Username" />
             <input type="email" className="signUpInput" placeholder="Email" onChange={handleText} />
-            <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" onChange={handleText} />
-            <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Confirm Password" />
+            <input id="password" type={showPassword ? "text" : "password"} className="signUpInput passwordField" placeholder="Password" onChange={handleText} />
+            <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput passwordField" placeholder="Confirm Password" />
             <div id="submitContainer">
                 <button className="signUpButton">Sign Up</button>
                 <p id="alreadyHaveAnAccount">Already have an account?</p>

@@ -101,10 +101,44 @@
 }
 
 #showPassword {
+    appearance: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+/* Oculta o input real */
+#showPassword {
+    appearance: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+/* Contêiner do input */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Estiliza o checkbox personalizado */
+.checkbox-check {
     border: 2px solid #333;
     width: 18px;
     height: 18px;
-    appearance: none;
-    cursor: pointer;
     background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Adiciona o checkmark quando o input está marcado */
+#showPassword:checked + .checkbox-check::before {
+    content: "✔"; /* Unicode checkmark */
+    font-size: 19px;
+    color: rgb(157, 20, 248);
+    position: absolute;
+    top: -7px;
 }
