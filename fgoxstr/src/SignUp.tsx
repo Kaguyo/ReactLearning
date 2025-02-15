@@ -15,6 +15,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
 
     // Serve como chave mestre em condiçoes if || para manipular comportamento da herta na pagina signup
     const [hertaAdmKey, setHertaAdmKey] = useState(false);
+    const [hoveringHerta, setHoveringHerta] = useState(false);
 
     const copyEmailFrame = useRef(0);
     const copyPasswordFrame = useRef(0);
@@ -56,7 +57,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now() - lastInputTime;
-            if (timeElapsed >= 500 && (!showPassword || hertaAdmKey)) {
+            if (timeElapsed >= 500 && !hoveringHerta && (!showPassword || hertaAdmKey)) {
                 if (imageSource === strPath + "HertaSpying.png") {
                     setHertaAction(strPath + "HertaThinking1.png");
                 }
@@ -82,8 +83,24 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     return (
         <div id="signUpContainer">
             <div id="ghostDiv">
-                <div id="hertaFaceDiv" onClick={() => hertaIconSwitch(imageSource)}>
-                    <img src={imageSource} id='hertaFace' />
+                <div id="hertaFaceDiv" 
+                    onMouseEnter={() => {
+                        setHoveringHerta(true);
+                        setHertaFace(imageSource === strPath + "HertaSpying.png" 
+                            ? strPath + "HertaStealthing.png" 
+                            : strPath + "HertaSpying.png");
+                        }
+                    }
+                    onMouseLeave={() => {
+                        setHoveringHerta(false);
+                        setHertaFace(imageSource === strPath + "HertaSpying.png" 
+                            ? strPath + "HertaStealthing.png" 
+                            : strPath + "HertaSpying.png");
+                        }
+                    }
+                    onClick={toggleShowPassword} 
+                    > 
+                        <img src={imageSource} id='hertaFace' />
                 </div>
                 <div id="hertaHandDiv">
                     <img src={animationSource} id="hertaAction" />
@@ -97,7 +114,8 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                         checked={showPassword} 
                         onChange={toggleShowPassword} 
                     />
-                    <span className="checkbox-check"></span>
+                    <span className="checkbox-check" id="spanCheckBox"></span>
+                    <label htmlFor="showPassword">Show password</label>
                 </label>
             </div>
             <input type="text" className="signUpInput" placeholder="Username" />

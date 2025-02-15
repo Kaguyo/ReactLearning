@@ -96,21 +96,12 @@
     left: 26%;
     color: white;
     display: flex;
-    gap: 6px;
     align-items: center;
-}
-
-#showPassword {
-    appearance: none;
-    position: absolute;
-    width: 0;
-    height: 0;
 }
 
 /* Oculta o input real */
 #showPassword {
     appearance: none;
-    position: absolute;
     width: 0;
     height: 0;
 }
@@ -141,4 +132,8 @@
     color: rgb(157, 20, 248);
     position: absolute;
     top: -7px;
+}
+
+#spanCheckBox {
+    margin-right: 6px;
 }
