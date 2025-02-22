@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import './assets/styles/SignUp.css';
 
 interface SignUpProps {
@@ -18,63 +18,66 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
 
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
-    
+
     const [lastInputTime, setLastInputTime] = useState<number>(0);
 
     function handleText(event: ChangeEvent<HTMLInputElement>) {
-        if (event.target.type == "email") {
-            setEmailField(event.target.value);
+        const { type, id, value } = event.target;
+
+        if (type === "email") {
+            setEmailField(value);
             setHertaFace(strPath + "HertaSpying.png");
             setHertaAction(strPath + `WritingHerta${copyEmailFrame.current + 1}.png`);
-            if (copyEmailFrame.current <= 8) {
-                copyEmailFrame.current ++;
-            } else {
-                copyEmailFrame.current = 0;
-            }
-            setLastInputTime(Date.now());
-
-        } else if (event.target.id == "password") {
-            setPasswordField(event.target.value);
+            copyEmailFrame.current = (copyEmailFrame.current + 1) % 9;
+        } else if (id === "password") {
+            setPasswordField(value);
             if (showPassword) {
                 setHertaFace(strPath + "HertaSpying.png");
                 setHertaAction(strPath + `WritingHerta${copyPasswordFrame.current + 1}.png`);
             }
-            if (copyPasswordFrame.current <= 8) {
-                copyPasswordFrame.current ++;
-            } else {
-                copyPasswordFrame.current = 0;
-            }
-            setLastInputTime(Date.now());
+            copyPasswordFrame.current = (copyPasswordFrame.current + 1) % 9;
         }
+
+        setLastInputTime(Date.now());
     }
 
-    // Inicializacao Timer de last input
+    function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+        console.log("Form Submitted:", { emailField, passwordField });
+        // Add logic to handle form submission (e.g., API call)
+    }
+
+    function hertaIconSwitch(image: string) {
+        console.log("Herta Icon Clicked:", image);
+        // Define behavior when Herta's face is clicked
+    }
+
+    // Timer for last input activity
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now() - lastInputTime;
-            if (timeElapsed >= 800) {
-                if (!showPassword) {
-                    if (imageSource == strPath + "HertaSpying.png") {
-                        setHertaAction(strPath + "HertaThinking1.png");
-                    }
-                    setHertaFace(strPath + "HertaStealthing.png");
+            if (timeElapsed >= 800 && !showPassword) {
+                if (imageSource === strPath + "HertaSpying.png") {
+                    setHertaAction(strPath + "HertaThinking1.png");
                 }
+                setHertaFace(strPath + "HertaStealthing.png");
             }
         }, 800);
 
         return () => clearInterval(interval);
     }, [lastInputTime, emailField, passwordField, strPath, imageSource]);
 
-    // Inicializacao de animacaoIdle Thinking
+    // Idle animation logic
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now();
             if (timeElapsed >= 500 && !showPassword && (timeElapsed - lastInputTime) >= 500) {
-                if (animationSource[animationSource.length-5] == "1") {
+                const lastChar = animationSource[animationSource.length - 5];
+                if (lastChar === "1") {
                     setHertaAction(strPath + "HertaThinking2.png");
-                } else if (animationSource[animationSource.length-5] == "2") {
+                } else if (lastChar === "2") {
                     setHertaAction(strPath + "HertaThinking3.png");
-                } else if (animationSource[animationSource.length-5] == "3") {
+                } else {
                     setHertaAction(strPath + "HertaThinking1.png");
                 }
             }
@@ -93,14 +96,16 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                     <img src={animationSource} id="hertaAction" />
                 </div>
             </div>
-            <input type="text" className="signUpInput" placeholder="Username" />
-            <input type="email" className="signUpInput" placeholder="Email" onChange={handleText} />
-            <input id="password" type="password" className="signUpInput" placeholder="Password" onChange={handleText} />
-            <input id="passwordConfirmation" type="password" className="signUpInput" placeholder="Confirm Password" />
-            <div id="submitContainer">
-                <button className="signUpButton">Sign Up</button>
-                <p id="alreadyHaveAnAccount">Already have an account?</p>
-            </div>
+            <form onSubmit={handleSubmit} id="form">
+                <input type="text" className="signUpInput" placeholder="Username" name="username" />
+                <input type="email" className="signUpInput" placeholder="Email" name="email" value={emailField} onChange={handleText} />
+                <input id="password" type="password" className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
+                <input id="passwordConfirmation" type="password" className="signUpInput" placeholder="Confirm Password" name="confirmPassword" />
+                <div id="submitContainer">
+                    <button type="submit" className="signUpButton">Sign Up</button>
+                    <p id="alreadyHaveAnAccount">Already have an account?</p>
+                </div>
+            </form>
         </div>
     );
 }
