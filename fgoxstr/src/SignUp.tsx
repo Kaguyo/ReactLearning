@@ -43,13 +43,12 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
 
     function handleSubmit(event: FormEvent) {
         event.preventDefault();
-        console.log("Form Submitted:", { emailField, passwordField });
-        // Add logic to handle form submission (e.g., API call)
+        
     }
 
     function hertaIconSwitch(image: string) {
-        console.log("Herta Icon Clicked:", image);
-        // Define behavior when Herta's face is clicked
+       
+        
     }
 
     // Timer for last input activity

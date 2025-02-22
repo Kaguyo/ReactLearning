@@ -6,7 +6,7 @@
 }
 
 input::placeholder {
-    color: rgb(40, 40, 40); /* Cor desejada */
+    color: rgb(132, 132, 132); /* Cor desejada */
     opacity: 1; /* Garante que a cor fique visível */
 }
 
