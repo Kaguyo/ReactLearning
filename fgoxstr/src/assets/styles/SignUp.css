@@ -17,6 +17,7 @@
     transform: translateY(-50%);
     width: 100px;
     height: 200px;
+    user-select: none;
 }
 
 #hertaFaceDiv {
@@ -36,7 +37,6 @@
     position: absolute;
     top: 39%;
 }
-
 
 .signUpInput {
     width: 338px;
@@ -68,7 +68,7 @@
 }
 
 #submitContainer {
-    margin-top: 20px;
+    margin-top: 60px;
     width: 338px;
     display: flex;
     align-items: center;
@@ -90,7 +90,23 @@
 }
 
 #form {
+    user-select: none;
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+#togglePassword {
+    position: absolute;
+    margin-bottom: 110px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+#labelCheckbox {
+    position: absolute;
+    margin-bottom: 110px;
+    margin-left: 20px;
+    cursor: pointer;
 }

@@ -22,7 +22,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     const [passwordField, setPasswordField] = useState("");
     const [passwordConfirmationField, setPasswordConfirmationField] = useState("");
 
-    const [lastInputTime, setLastInputTime] = useState<number>(0);
+    const [lastInputTime, setLastInputTime] = useState<number>(500);
 
     function handleText(event: ChangeEvent<HTMLInputElement>) {
         const { type, id, value } = event.target;
@@ -30,6 +30,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
         if (id === "username") {
             setUsernameField(value);
         } else if (type === "email") {
+            setLastInputTime(Date.now());
             setEmailField(value);
             setHertaFace(strPath + "HertaSpying.png");
             setHertaAction(strPath + `WritingHerta${copyEmailFrame.current + 1}.png`);
@@ -37,6 +38,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
         } else if (id === "password") {
             setPasswordField(value);
             if (showPassword) {
+                setLastInputTime(Date.now());
                 setHertaFace(strPath + "HertaSpying.png");
                 setHertaAction(strPath + `WritingHerta${copyPasswordFrame.current + 1}.png`);
             }
@@ -45,7 +47,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
             setPasswordConfirmationField(value);
         }
 
-        setLastInputTime(Date.now());
+        
     }
 
     function handleSubmit(event: FormEvent) {
@@ -54,7 +56,8 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
         const userData = {
             username: usernameField,
             email: emailField,
-            password: passwordField
+            password: passwordField,
+            password2: passwordConfirmationField
         };
     
         signUpUser(userData)
@@ -66,9 +69,8 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
             });
     }
 
-    function hertaIconSwitch(image: string) {
-       
-        
+    function togglePasswordVisibility() {
+        setShowPassword(prevState => !prevState);
     }
 
     // Timer for last input activity
@@ -90,7 +92,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     useEffect(() => {
         const interval = setInterval(() => {
             const timeElapsed = Date.now();
-            if (timeElapsed >= 500 && !showPassword && (timeElapsed - lastInputTime) >= 500) {
+            if (timeElapsed >= 500 && (timeElapsed - lastInputTime) >= 500) {
                 const lastChar = animationSource[animationSource.length - 5];
                 if (lastChar === "1") {
                     setHertaAction(strPath + "HertaThinking2.png");
@@ -99,6 +101,8 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                 } else {
                     setHertaAction(strPath + "HertaThinking1.png");
                 }
+                setHertaFace(strPath + "HertaStealthing.png");
+                
             }
         }, 500);
 
@@ -108,7 +112,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     return (
         <div id="signUpContainer">
             <div id="ghostDiv">
-                <div id="hertaFaceDiv" onClick={() => hertaIconSwitch(imageSource)}>
+                <div id="hertaFaceDiv" onClick={() => togglePasswordVisibility()}>
                     <img src={imageSource} id='hertaFace' />
                 </div>
                 <div id="hertaHandDiv">
@@ -118,9 +122,11 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
             <form onSubmit={handleSubmit} id="form">
                 <input id="username" type="text" className="signUpInput" placeholder="Username" name="username" onChange={handleText}/>
                 <input type="email" className="signUpInput" placeholder="Email" name="email" value={emailField} onChange={handleText} />
-                <input id="password" type="password" className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
-                <input id="passwordConfirmation" type="password" className="signUpInput" placeholder="Confirm Password" name="confirmPassword" />
+                <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
+                <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Confirm Password" name="confirmPassword" onChange={handleText} />
                 <div id="submitContainer">
+                    <input type="checkbox" id="togglePassword" onChange={() => togglePasswordVisibility()}></input>
+                    <label id="labelCheckbox" htmlFor="togglePassword">Show password</label>
                     <button type="submit" className="signUpButton">Sign Up</button>
                     <p id="alreadyHaveAnAccount">Already have an account?</p>
                 </div>
