@@ -17,10 +17,12 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
     const copyEmailFrame = useRef(0);
     const copyPasswordFrame = useRef(0);
 
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [usernameField, setUsernameField] = useState("");
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
     const [passwordConfirmationField, setPasswordConfirmationField] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string>(""); // New state for error message
 
     const [lastInputTime, setLastInputTime] = useState<number>(500);
 
@@ -46,20 +48,27 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
         } else if (id === "passwordConfirmation") {
             setPasswordConfirmationField(value);
         }
-
-        
     }
 
     function handleSubmit(event: FormEvent) {
         event.preventDefault();
-        
+
+        if (passwordField !== passwordConfirmationField) {
+            setErrorMessage("Passwords do not match!");
+            return;
+        } else if (passwordField.length < 12) {
+            setErrorMessage("Password must be atleast (10) characters long!")
+        } else {
+            setErrorMessage("");
+        }
+
         const userData = {
             username: usernameField,
             email: emailField,
             password: passwordField,
             password2: passwordConfirmationField
         };
-    
+
         signUpUser(userData)
             .then((data) => {
                 console.log('User created successfully', data);
@@ -71,6 +80,7 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
 
     function togglePasswordVisibility() {
         setShowPassword(prevState => !prevState);
+        setIsPasswordVisible(prevState => !prevState);
     }
 
     // Timer for last input activity
@@ -124,8 +134,9 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                 <input type="email" className="signUpInput" placeholder="Email" name="email" value={emailField} onChange={handleText} />
                 <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
                 <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Confirm Password" name="confirmPassword" onChange={handleText} />
+                {errorMessage && <p id="errorMessage" className="errorMessage">{errorMessage}</p>}
                 <div id="submitContainer">
-                    <input type="checkbox" id="togglePassword" onChange={() => togglePasswordVisibility()}></input>
+                    <input type="checkbox" id="togglePassword" checked={isPasswordVisible} onChange={togglePasswordVisibility}></input>
                     <label id="labelCheckbox" htmlFor="togglePassword">Show password</label>
                     <button type="submit" className="signUpButton">Sign Up</button>
                     <p id="alreadyHaveAnAccount">Already have an account?</p>
