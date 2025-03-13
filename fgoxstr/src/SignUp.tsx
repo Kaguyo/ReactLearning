@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChangeEvent, FormEvent } from "react";
-import { signUpUser } from "./api/apiService";
+import { signUpUser, singInUser } from "./api/apiService";
 import './assets/styles/SignUp.css';
 
 interface SignUpProps {
@@ -13,6 +13,7 @@ interface SignUpProps {
 export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAction }: SignUpProps) {
     const strPath = "/src/assets/icons/";
     const [showPassword, setShowPassword] = useState(false);
+    const [signUpMode, setSignUpMode] = useState(true);
 
     const copyEmailFrame = useRef(0);
     const copyPasswordFrame = useRef(0);
@@ -50,8 +51,16 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
         }
     }
 
+    function switchPageMode(){
+        if (signUpMode){
+            document.getElementById("signUpContainer")?.classList.add("signIn");
+        }
+        setSignUpMode(prevState => !prevState);
+    }
+
     function handleSubmit(event: FormEvent) {
         event.preventDefault();
+
 
         if (passwordField !== passwordConfirmationField) {
             setErrorMessage("Passwords do not match!");
@@ -62,20 +71,39 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
             setErrorMessage("");
         }
 
-        const userData = {
-            username: usernameField,
-            email: emailField,
-            password: passwordField,
-            password2: passwordConfirmationField
-        };
+        
 
-        signUpUser(userData)
-            .then((data) => {
-                console.log('User created successfully', data);
-            })
-            .catch((error) => {
-                console.error('Failed to create user', error);
-            });
+        if (signUpMode) {
+
+            const userData = {
+                username: usernameField,
+                email: emailField,
+                password: passwordField,
+                password2: passwordConfirmationField
+            };
+            signUpUser(userData)
+                .then((data) => {
+                    console.log('User created successfully', data);
+                })
+                .catch((error) => {
+                    console.error('Failed to create user', error);
+                });
+        } else {
+
+            const userData = {
+                email: emailField,
+                password: passwordField
+            }
+
+            singInUser(userData)
+                .then((data) => {
+                    console.log(data);
+                })
+                .catch((_error) => {
+                    console.log("Failed to login");
+                    setErrorMessage("Email or password incorrect!");
+                })
+        } 
     }
 
     function togglePasswordVisibility() {
@@ -129,19 +157,33 @@ export function SignUp({ imageSource, animationSource, setHertaFace, setHertaAct
                     <img src={animationSource} id="hertaAction" />
                 </div>
             </div>
-            <form onSubmit={handleSubmit} id="form">
-                <input id="username" type="text" className="signUpInput" placeholder="Username" name="username" onChange={handleText}/>
-                <input type="email" className="signUpInput" placeholder="Email" name="email" value={emailField} onChange={handleText} />
-                <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
-                <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Confirm Password" name="confirmPassword" onChange={handleText} />
-                {errorMessage && <p id="errorMessage" className="errorMessage">{errorMessage}</p>}
-                <div id="submitContainer">
-                    <input type="checkbox" id="togglePassword" checked={isPasswordVisible} onChange={togglePasswordVisibility}></input>
-                    <label id="labelCheckbox" htmlFor="togglePassword">Show password</label>
-                    <button type="submit" className="signUpButton">Sign Up</button>
-                    <p id="alreadyHaveAnAccount">Already have an account?</p>
-                </div>
-            </form>
+            { signUpMode ?
+                <form onSubmit={handleSubmit} id="form">
+                    <input id="username" type="text" className="signUpInput" placeholder="Username" name="username" onChange={handleText}/>
+                    <input type="email" className="signUpInput" placeholder="Email" name="email" value={emailField} onChange={handleText} />
+                    <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
+                    <input id="passwordConfirmation" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Confirm Password" name="confirmPassword" onChange={handleText} />
+                    {errorMessage && <p id="errorMessage" className="errorMessage">{errorMessage}</p>}
+                    <div id="submitContainer">
+                        <input type="checkbox" id="togglePassword" checked={isPasswordVisible} onChange={togglePasswordVisibility}></input>
+                        <label id="labelCheckbox" htmlFor="togglePassword">Show password</label>
+                        <button type="submit" className="signUpButton">Sign Up</button>
+                        <p id="alreadyHaveAnAccount" onClick={switchPageMode}>Already have an account?</p>
+                    </div>
+                </form>
+                :
+                <form onSubmit={handleSubmit} id="form">
+                    <input type="email" className="signUpInput" placeholder="Email" name="email" value={emailField} onChange={handleText} />
+                    <input id="password" type={showPassword ? "text" : "password"} className="signUpInput" placeholder="Password" name="password" value={passwordField} onChange={handleText} />
+                    {errorMessage && <p id="errorMessage" className="errorMessage">{errorMessage}</p>}
+                    <div id="submitContainer">
+                        <input type="checkbox" id="togglePassword" checked={isPasswordVisible} onChange={togglePasswordVisibility}></input>
+                        <label id="labelCheckbox" htmlFor="togglePassword">Show password</label>
+                        <button type="submit" className="signUpButton">Sign In</button>
+                        <p id="createNewAccount" onClick={switchPageMode}>Create new account</p>
+                    </div>
+                </form>
+            }
         </div>
     );
 }

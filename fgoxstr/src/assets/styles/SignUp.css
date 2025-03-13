@@ -8,6 +8,8 @@
     flex-direction: column;
     align-items: center;
     padding-top: 70px
+} #signUpContainer.signIn {
+    padding-top: 150px;
 }
 
 #ghostDiv {
@@ -86,6 +88,17 @@
 }
 
 #alreadyHaveAnAccount:hover {
+    transform: scale(1.1);
+}
+
+#createNewAccount {
+    margin-left: 45px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    transform-origin: center;
+}
+
+#createNewAccount:hover {
     transform: scale(1.1);
 }
 

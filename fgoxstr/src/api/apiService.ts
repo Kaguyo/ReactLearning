@@ -11,3 +11,13 @@ export const signUpUser = async (userData: { username: string, email: string, pa
         throw error;
     }
 };
+
+export const singInUser = async (userData: {email: string, password: string}) => {
+    try {
+        const response = await axios.post(`${API_URL}/users`, userData);
+        return response.data;
+    } catch (error) {
+        console.error('Error during sign in:', error);
+        throw error;
+    }
+};
