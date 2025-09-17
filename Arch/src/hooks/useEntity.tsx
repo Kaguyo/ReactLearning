@@ -1,4 +1,5 @@
-import Entity from '../components/Entity';
+import type { ReactNode } from "react";
+import React from "react";
 
 interface UseEntityProps {
   joints: number;
@@ -6,31 +7,53 @@ interface UseEntityProps {
 }
 
 export function useEntity({ joints, position }: UseEntityProps) {
-   
+  const elements: ReactNode[] = [];
+
   for (let i = 0; i < joints; i++) {
-    const joint = document.createElement('div');
-    if (i === 0) {
-        joint.id = 'head';
-    }
+    const isHead = i === 0;
+    const isTail = i === joints - 1;
 
-    if (joint.id === 'head') {
-        joint.style.width = '20px';
-        joint.style.height = '20px';
-        joint.style.backgroundColor = 'red';
-        joint.style.borderRadius = '50%';
-        joint.style.left = `${position.x}px`;
-        joint.style.top = `${position.y}px`;
-    } else {
-        joint.style.width = '15px';
-        joint.style.height = '15px';
-        joint.style.backgroundColor = 'blue';
-        joint.style.borderRadius = '50%';
-    }
+    const jointStyle: React.CSSProperties = isHead
+      ? {
+          width: '20px',
+          height: '20px',
+          backgroundColor: 'red',
+          borderRadius: '50%',
+          position: 'absolute',
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+        }
+      : {
+          width: '15px',
+          height: '15px',
+          backgroundColor: 'blue',
+          borderRadius: '50%',
+          position: 'relative',
+        };
 
-    
+    elements.push(
+      <div
+        key={`joint-${i}`}
+        id={isHead ? 'head' : isTail ? 'tail' : undefined}
+        style={jointStyle}
+      />
+    );
+
+    // Add connector except after the last joint
+    if (i < joints - 1) {
+      elements.push(
+        <div
+          key={`connector-${i}`}  
+          style={{
+            width: isHead ? '40px' : '30px',
+            height: '20px',
+            backgroundColor: 'transparent',
+            display: 'inline-block',
+          }}
+        />
+      );
+    }
   }
 
-  const entity = 
-
-  return <div/>;
+  return <>{elements}</>;
 }

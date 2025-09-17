@@ -6,7 +6,9 @@ function Entity() {
     const entity = useEntity({ joints: 7, position: position });
 
     return (
-    entity
+    <>
+      {entity}
+    </>
   )
 }
 export default Entity
